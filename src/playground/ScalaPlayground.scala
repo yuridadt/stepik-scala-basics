@@ -11,3 +11,10 @@ object ScalaPlayground2 {
   }
 
 }
+
+object StringReverse extends App{
+  val s: String = " I like     Scala "
+  val l = s.trim.split(" ").filter(_.nonEmpty).reverse.mkString(" ")
+  println(l)
+
+}
