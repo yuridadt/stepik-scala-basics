@@ -37,4 +37,75 @@ object Inheritance extends App {
 
   val battn = new RoundedButton("1")
   println(battn.click)
+
+//  Полиморфизм
+  val aPerson: Person = new Student("alice",21,2,"f")
+ println(aPerson.greet) // выведет greet от Student
+
+//  Как защититьс яот переопредления
+//  1) использовать final перед классом (тогда нельзя делать extends)
+//  2) использовать final перед методом ( его нельзя будет вызвать)
+//  3) использовтаь sealed вместо final ( тогда можно вызывать extends но только в текущем файле)
+
+  sealed abstract class DayOfTheWeek(val name: String, val isWeekend: Boolean)
+
+  case object Monday extends DayOfTheWeek("Monday", false)
+  case object Tuesday extends DayOfTheWeek("Tuesday",  false)
+  case object Wednesday extends DayOfTheWeek("Wednesday", false)
+  case object Thursday extends DayOfTheWeek("Thursday", false)
+  case object Friday extends DayOfTheWeek("Friday", false)
+  case object Saturday extends DayOfTheWeek("Saturday", true)
+  case object Sunday extends DayOfTheWeek("Sunday", true)
+
+//  Абстрактные классы
+  abstract  class BaseDataSource(dataSourceName: String) {
+  def save: String = {
+    s"Save method implemented"
+  }
+  def delete: String = {
+    s"Delete method implemented"
+  }
+
+//  Абстрактные поля и методы оставляем пустыми
+  val user: String
+  def connect: String
+}
+  class PublicDataSource(ds:String) extends BaseDataSource(ds){
+//    Надо прописать все пустые методы из абстрактоного класса
+    val user = "publicUser"
+    def connect: String = {
+      s"PublicData source, no password needed"
+    }
+  }
+
+//  Анонимный класс
+  val someSource = new BaseDataSource("someDS") {
+    override val user: String = "someSourceUser"
+
+    override def connect: String = "someSource connection"
+  }
+println(someSource.getClass)
+
+  // задача
+
+  abstract class Event {
+    def trigger(eventName: String): Unit
+  }
+
+  class Listener(val eventName: String, var event: Event) {
+    def register(evt: Event) { event = evt }
+    def sendNotification() { event.trigger(eventName) }
+  }
+
+  val notification: Listener = new Listener("mousedown", null)
+  val abs_cls: Event = new Event {
+    override def trigger(eventName: String): Unit = println(s"trigger $eventName event")
+  }
+
+  notification.register(  abs_cls
+  )
+
+  println(notification.sendNotification())
+
+//  Трейты
 }
